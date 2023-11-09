@@ -132,7 +132,7 @@ class BankDatabase:
 
     # Update the user_deposit method
     def user_deposit(self, user, amount):
-        if amount >= 10 and amount % 10 == 0:
+        if amount >= 10 and amount % 10 == 0 and amount > 0:
             # Calculate the new balance after deposit
             user_balance = user['balance'] + amount
 
@@ -420,36 +420,66 @@ class BankDatabase:
     def financial_calculator(self):
         while True:
             print("Welcome to the Financial Calculator!")
-            print("Choose a calculation: 'Investment' or 'Bond'")
+            print("Choose a calculation: ")
+            print("1.Investment")
+            print("2. Bond ")
             user_choice = input("Enter your choice: ").strip().lower()
-            if user_choice == 'investment':
-                principal = float(input("Enter the amount of money you are depositing: "))
+
+            if user_choice == '1':
+                principal = float(input("Enter Investment amount: "))
+                while principal < 0:
+                    print("Please enter a valid amount.")
+                    principal = float(input("Enter Investment amount: "))
+
                 interest_rate = float(input("Enter the interest rate (as a decimal): "))
+                while interest_rate < 0:
+                    print("Please enter a valid rate.")
+                    interest_rate = float(input("Enter the interest rate (as a decimal): "))
+
                 years = int(input("Enter the number of years you plan on investing for: "))
-                interest_type = input("Do you want 'simple' or 'compound' interest? ").strip().lower()
-                if interest_type == 'simple':
+                while years < 0:
+                    print("Please enter a valid number of years.")
+                    years = int(input("Enter the number of years you plan on investing for: "))
+
+                interest_type = input("Enter 1 for: 'simple' interest or Enter 2 for: 'compound' interest? ").strip().lower()
+                if interest_type == '1':
                     # Calculate simple interest for investment
                     interest_amount = principal * (1 + interest_rate * years)
                     print(f"Your total amount after {years} years with simple interest will be: {interest_amount:.2f}")
-                elif interest_type == 'compound':
+                elif interest_type == '2':
                     # Calculate compound interest for investment
                     compound_interest = principal * math.pow((1 + interest_rate), years)
                     print(
                         f"Your total amount after {years} years with compound interest will be: {compound_interest:.2f}")
                 else:
                     print("Invalid interest type. Please enter 'simple' or 'compound'.")
-            elif user_choice == 'bond':
+
+            elif user_choice == '2':
                 present_value = float(input("Enter the present value of the house: "))
+                while present_value < 0:
+                    print("Present value cannot be negative. Please enter a valid amount.")
+                    present_value = float(input("Enter the present value of the house: "))
+
                 annual_interest_rate = float(input("Enter the annual interest rate (as a percentage): "))
+                while annual_interest_rate < 0:
+                    print("Annual interest rate cannot be negative. Please enter a valid rate.")
+                    annual_interest_rate = float(input("Enter the annual interest rate (as a percentage): "))
+
                 years = int(input("Enter the number of years over which the bond will be repaid: "))
+                while years < 0:
+                    print("Number of years cannot be negative. Please enter a valid number.")
+                    years = int(input("Enter the number of years over which the bond will be repaid: "))
+
                 monthly_interest_rate = (annual_interest_rate / 100) / 12
                 total_payments = years * 12
                 # Calculate monthly repayment using the provided formula
                 repayment = (monthly_interest_rate * present_value) / (
-                            1 - (1 + monthly_interest_rate) ** -total_payments)
+                        1 - (1 + monthly_interest_rate) ** -total_payments)
                 print(f"You will have to repay approximately {repayment:.2f} each month for the bond.")
+
             else:
                 print("Invalid choice. Please enter 'Investment' or 'Bond'.")
+
             another_calculation = input("Do you want to perform another calculation? (yes/no): ").strip().lower()
             if another_calculation != 'yes':
                 print("Thank you for using the Financial Calculator. Goodbye!")
